@@ -8,6 +8,15 @@
 
 namespace stl_to_json {
 
+    template <typename T>
+    void
+    serialize(std::ostream & os, std::vector<T> const & vec);
+
+    template <typename U, typename V>
+    void
+    serialize(std::ostream & os, std::map<U, V> const & vec);
+
+
     void
     serialize(std::ostream & os, int i)
     {

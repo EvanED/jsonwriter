@@ -39,7 +39,9 @@
     BOOST_PP_TUPLE_ELEM(2, 1, field_tuple);
 
 #define STL_TO_JSON_INTERNAL_OUTPUT_FIELD2(os, s, fld) \
-    os << BOOST_PP_STRINGIZE(fld) << ": " << s.fld << "\n";
+    os << BOOST_PP_STRINGIZE(fld) << ": ";             \
+    stl_to_json::do_serialize(os, s.fld);              \
+    os << "\n";
 
 #define STL_TO_JSON_INTERNAL_OUTPUT_FIELD(r, params, field_tuple) \
     STL_TO_JSON_INTERNAL_OUTPUT_FIELD2(                    \
@@ -132,6 +134,19 @@ namespace stl_to_json {
             serialize(os, it->second);
         }
         os << "}";
+    }
+
+    void
+    serialize(std::ostream & os, unsigned long l)
+    {
+        os << l;
+    }
+
+    template<typename T>
+    void
+    do_serialize(std::ostream & os, T const & val)
+    {
+        serialize(os, val);
     }
 }
 

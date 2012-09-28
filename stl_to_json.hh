@@ -1,16 +1,17 @@
 #ifndef STL2JSON_HH
 #define STL2JSON_HH
 
-#include <map>
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
-#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/control/expr_if.hpp>
+
 
 #define MY_SEQUENCE_CREATOR_0(a,b) ((a,b)) MY_SEQUENCE_CREATOR_1
 #define MY_SEQUENCE_CREATOR_1(a,b) ((a,b)) MY_SEQUENCE_CREATOR_0

@@ -1,5 +1,5 @@
-#ifndef STL2JSON_HH
-#define STL2JSON_HH
+#ifndef JSONWRITER_WRITER_HH
+#define JSONWRITER_WRITER_HH
 
 #include <iostream>
 #include <vector>
@@ -30,8 +30,8 @@
 #define MY_SEQUENCE_CREATOR_1_END
 
 
-/// THIS IS AN INTERNAL MACRO. Use STL_TO_JSON_DEFINE_STRUCT_ONLY
-/// or STL_TO_JSON_DEFINE_SERIALIZED_STRUCT instead.
+/// THIS IS AN INTERNAL MACRO. Use JSONWRITER_DEFINE_STRUCT_ONLY
+/// or JSONWRITER_DEFINE_SERIALIZED_STRUCT instead.
 ///
 /// Given the name of a struct and a sequence of fields,
 /// expands to a definition of that structure.
@@ -40,30 +40,30 @@
 /// ((int, x))((int, y))((double, z)).
 //
 // The ~ is meant as a placeholder; it is passed to
-// STL_TO_JSON_INTERNAL_DEFINE_FIELD in the 'data' parameter, but is
+// JSONWRITER_INTERNAL_DEFINE_FIELD in the 'data' parameter, but is
 // then unused.
-#define STL_TO_JSON_INTERNAL_DEFINE_STRUCT(struct_name, fields)  \
-    struct struct_name {                                \
-        BOOST_PP_SEQ_FOR_EACH(                          \
-            STL_TO_JSON_INTERNAL_DEFINE_FIELD,          \
-            ~,                                          \
-            fields)                                     \
+#define JSONWRITER_INTERNAL_DEFINE_STRUCT(struct_name, fields)  \
+    struct struct_name {                       \
+        BOOST_PP_SEQ_FOR_EACH(                 \
+            JSONWRITER_INTERNAL_DEFINE_FIELD,  \
+            ~,                                 \
+            fields)                            \
     };
 
 
-/// THIS IS AN INTERNAL MACRO. Use STL_TO_JSON_DEFINE_SERIALIZE
-/// or STL_TO_JSON_DEFINE_SERIALIZED_STRUCT instead.
+/// THIS IS AN INTERNAL MACRO. Use JSONWRITER_DEFINE_SERIALIZE or
+/// JSONWRITER_DEFINE_SERIALIZED_STRUCT instead.
 ///
 /// Given the name of a struct and a list of fields, expands to
 /// corresponding definition of a serialize function.
 ///
 /// The fields must be double-parenthesized, e.g.
 /// ((int, x))((int, y))((double, z)).
-#define STL_TO_JSON_INTERNAL_DEFINE_SERIALIZE(struct_name, fields) \
+#define JSONWRITER_INTERNAL_DEFINE_SERIALIZE(struct_name, fields)  \
     void serialize(std::ostream & os, struct_name const & s) {     \
         os << "{ ";                                                \
         BOOST_PP_SEQ_FOR_EACH_I(                                   \
-            STL_TO_JSON_INTERNAL_OUTPUT_FIELD,                     \
+            JSONWRITER_INTERNAL_OUTPUT_FIELD,                      \
             (os, s),                                               \
             fields)                                                \
         os << "} ";                                                \
@@ -81,7 +81,7 @@
 /// additional calls to iteration constructs, but we're not using any
 /// more so it doesn't matter), and 'data' corresponds to the second
 /// parameter to 'BOOST_PP_SEQ_FOR_EACH', which in this case is ~.
-#define STL_TO_JSON_INTERNAL_DEFINE_FIELD(r, data, field_tuple) \
+#define JSONWRITER_INTERNAL_DEFINE_FIELD(r, data, field_tuple) \
     BOOST_PP_TUPLE_ELEM(2, 0, field_tuple)    \
     BOOST_PP_TUPLE_ELEM(2, 1, field_tuple);
 
@@ -102,16 +102,16 @@
 /// 'i'th field. Then the first field (when 'i==0') shouldn't have a
 /// preceeding comma since it is the first one, but all others
 /// should.)
-#define STL_TO_JSON_INTERNAL_OUTPUT_FIELD2(os, s, i, fld) \
-    BOOST_PP_EXPR_IF(i, os << ", ";)                   \
-    os << BOOST_PP_STRINGIZE(fld) << ": ";             \
-    stl_to_json::do_serialize(os, s.fld);              \
+#define JSONWRITER_INTERNAL_OUTPUT_FIELD2(os, s, i, fld) \
+    BOOST_PP_EXPR_IF(i, os << ", ";)         \
+    os << BOOST_PP_STRINGIZE(fld) << ": ";   \
+    stl_to_json::do_serialize(os, s.fld);    \
     os << "\n";
 
 
 /// THIS IS AN INTERNAL MACRO
 ///
-/// Like STL_TO_JSON_INTERNAL_OUTPUT_FIELD2, but with parameters bound
+/// Like JSONWRITER_INTERNAL_OUTPUT_FIELD2, but with parameters bound
 /// up: 'params' in this macro is '(os, s)', and 'field_tuple' is
 /// '(_, fld)' (where the first item in that pair is the type of the
 /// field and is unused).
@@ -119,11 +119,11 @@
 /// The two stage macro is there to make the ..._FIELD2 macro more
 /// readable, so it's not extracting things from the field_tuple
 /// (which takes a lot of text) in the midst of other code.
-#define STL_TO_JSON_INTERNAL_OUTPUT_FIELD(r, params, i, field_tuple) \
-    STL_TO_JSON_INTERNAL_OUTPUT_FIELD2(                    \
-        BOOST_PP_TUPLE_ELEM(2, 0, params),                 \
-        BOOST_PP_TUPLE_ELEM(2, 1, params),                 \
-        i,                                                 \
+#define JSONWRITER_INTERNAL_OUTPUT_FIELD(r, params, i, field_tuple) \
+    JSONWRITER_INTERNAL_OUTPUT_FIELD2(            \
+        BOOST_PP_TUPLE_ELEM(2, 0, params),        \
+        BOOST_PP_TUPLE_ELEM(2, 1, params),        \
+        i,                                        \
         BOOST_PP_TUPLE_ELEM(2, 1, field_tuple))
 
 
@@ -137,8 +137,8 @@
 ///
 /// This isn't strictly an internal macro, but it does seem strange if
 /// you'd call it directly.
-#define STL_TO_JSON_DEFINE_STRUCT_ONLY(struct_name, fields) \
-    STL_TO_JSON_INTERNAL_DEFINE_STRUCT(struct_name,         \
+#define JSONWRITER_DEFINE_STRUCT_ONLY(struct_name, fields) \
+    JSONWRITER_INTERNAL_DEFINE_STRUCT(struct_name,         \
         BOOST_PP_CAT(MY_SEQUENCE_CREATOR_0 fields, _END))
 
 
@@ -152,7 +152,7 @@
 /// The function will have the signature
 ///     void specialize(std::ostream & os, struct_name const &)
 /// and appear in the current namespace. For a description of this
-/// function, see STL_TO_JSON_DEFINE_SERIALIZED_STRUCT; this macro
+/// function, see JSONWRITER_DEFINE_SERIALIZED_STRUCT; this macro
 /// works the same way but on an existing structure type.
 ///
 /// 'fields' is a sequence of the form '(type1, name1)(type2,
@@ -169,8 +169,8 @@
 /// if you want to put objects of this struct into a list, map,
 /// etc. and then serialize those, unless you take other steps to make
 /// it possible.)
-#define STL_TO_JSON_DEFINE_SERIALIZE(struct_name, field_pairs)  \
-    STL_TO_JSON_INTERNAL_DEFINE_SERIALIZE(struct_name,          \
+#define JSONWRITER_DEFINE_SERIALIZE(struct_name, field_pairs)  \
+    JSONWRITER_INTERNAL_DEFINE_SERIALIZE(struct_name,          \
         BOOST_PP_CAT(MY_SEQUENCE_CREATOR_0 field_pairs, _END))
 
 
@@ -196,9 +196,9 @@
 /// The behavior will be to print out a JSON object where the keys are
 /// the field names quoted, and the values are serialized descriptions
 /// of the values.
-#define STL_TO_JSON_DEFINE_SERIALIZED_STRUCT(struct_name, fields) \
-    STL_TO_JSON_DEFINE_STRUCT_ONLY(struct_name, fields)           \
-    STL_TO_JSON_DEFINE_SERIALIZE(struct_name, fields)
+#define JSONWRITER_DEFINE_SERIALIZED_STRUCT(struct_name, fields) \
+    JSONWRITER_DEFINE_STRUCT_ONLY(struct_name, fields)           \
+    JSONWRITER_DEFINE_SERIALIZE(struct_name, fields)
 
 
 namespace stl_to_json {

@@ -7,8 +7,10 @@
 #include <string>
 
 #include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/stringize.hpp>
+#include <boost/preprocessor/control/expr_if.hpp>
 
 #define MY_SEQUENCE_CREATOR_0(a,b) ((a,b)) MY_SEQUENCE_CREATOR_1
 #define MY_SEQUENCE_CREATOR_1(a,b) ((a,b)) MY_SEQUENCE_CREATOR_0
@@ -27,26 +29,29 @@
 #define STL_TO_JSON_INTERNAL_DEFINE_SERIALIZE(struct_name, fields) \
     void serialize(std::ostream & os, struct_name const & s) {     \
         os << "{ ";                                                \
-        BOOST_PP_SEQ_FOR_EACH(                                     \
+        BOOST_PP_SEQ_FOR_EACH_I(                                   \
             STL_TO_JSON_INTERNAL_OUTPUT_FIELD,                     \
             (os, s),                                               \
             fields)                                                \
         os << "} ";                                                \
     }
 
-#define STL_TO_JSON_INTERNAL_DEFINE_FIELD(r, data, field_tuple)    \
+#define STL_TO_JSON_INTERNAL_DEFINE_FIELD(r, data, field_tuple) \
     BOOST_PP_TUPLE_ELEM(2, 0, field_tuple)    \
     BOOST_PP_TUPLE_ELEM(2, 1, field_tuple);
 
-#define STL_TO_JSON_INTERNAL_OUTPUT_FIELD2(os, s, fld) \
+
+#define STL_TO_JSON_INTERNAL_OUTPUT_FIELD2(os, s, i, fld) \
+    BOOST_PP_EXPR_IF(i, os << ", ";)                   \
     os << BOOST_PP_STRINGIZE(fld) << ": ";             \
     stl_to_json::do_serialize(os, s.fld);              \
     os << "\n";
 
-#define STL_TO_JSON_INTERNAL_OUTPUT_FIELD(r, params, field_tuple) \
+#define STL_TO_JSON_INTERNAL_OUTPUT_FIELD(r, params, i, field_tuple) \
     STL_TO_JSON_INTERNAL_OUTPUT_FIELD2(                    \
         BOOST_PP_TUPLE_ELEM(2, 0, params),                 \
         BOOST_PP_TUPLE_ELEM(2, 1, params),                 \
+        i,                                                 \
         BOOST_PP_TUPLE_ELEM(2, 1, field_tuple))
 
 #define STL_TO_JSON_DEFINE_STRUCT_ONLY(struct_name, fields) \

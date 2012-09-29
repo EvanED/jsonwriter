@@ -1,0 +1,12 @@
+# -*- python -*-
+
+env = Environment()
+
+env.Append(CCFLAGS=["-g"])
+env.Append(CPPPATH=["#/../include"])
+
+if env["CXX"] == "g++":
+    env.Append(CXXFLAGS=["-std=c++0x"])
+
+for ex in ["ex1", "ex2", "ex3"]:
+    env.Program(ex, ex+".cc")

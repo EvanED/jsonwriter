@@ -202,7 +202,7 @@
     JSONWRITER_DEFINE_SERIALIZE(struct_name, fields)
 
 
-namespace stl_to_json {
+namespace jsonwriter {
 
     /// Serialize the given vector to the given stream as a JSON
     /// array.
@@ -345,10 +345,10 @@ namespace stl_to_json {
     /// this library's DEFINE_SERIALIZE and DEFINE_SERIALIZED_STRUCT
     /// macros need to serialize each field. However, neither a
     /// qualified or unqualified call will do the trick; a qualified
-    /// call (stl_to_json::serialize(...)) would prevent serializing a
+    /// call (jsonwriter::serialize(...)) would prevent serializing a
     /// field whose type has a serialize overload (unless it's defined
-    /// in stl_to_json, of course), but an unqualified name would
-    /// prevent looking in namespace stl_to_json for primitive types
+    /// in jsonwriter, of course), but an unqualified name would
+    /// prevent looking in namespace jsonwriter for primitive types
     /// and STL types. This wrapper solves the problem: the macros
     /// generate calls to do_serialize() which uses an unqualified
     /// call to serialize(). Custom types are picked up via
@@ -370,6 +370,6 @@ namespace stl_to_json {
 //     indent-tabs-mode: nil
 // End:
 
-#endif /* STL2JSON_HH */
+#endif /* JSONWRITER_WRITER_HH */
 
 

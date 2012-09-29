@@ -6,6 +6,20 @@ YAML). It provides output operations for common C++ types including
 STL containers, and is *extensible*, meaning you can provide an
 outputter for your own format, and is *simple to use*.
 
+== Building an installation ==
+
+This library currently consists of a single header, so there's no
+building to be done at all. Just copy that header to where you want.
+
+All examples in this README are also available in the `examples/`
+directory of the distribution. Build them by changing to that
+directory and running `scons`. (You'll need
+[SCons](http://www.scons.org) installed, of course.) `ex1` needs a
+compiler capable of compiling C++11's initializer list support; if you
+are using GCC, it will automatically pass `-std=c++0x` to your
+compiler.
+
+In addition, I should probably write some tests one of these days.
 
 == How to serialize an object ==
 

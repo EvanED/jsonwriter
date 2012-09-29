@@ -102,10 +102,11 @@
 /// 'i'th field. Then the first field (when 'i==0') shouldn't have a
 /// preceeding comma since it is the first one, but all others
 /// should.)
-#define JSONWRITER_INTERNAL_OUTPUT_FIELD2(os, s, i, fld) \
-    BOOST_PP_EXPR_IF(i, os << ", ";)         \
-    os << BOOST_PP_STRINGIZE(fld) << ": ";   \
-    stl_to_json::do_serialize(os, s.fld);    \
+#define JSONWRITER_INTERNAL_OUTPUT_FIELD2(os, s, i, fld)   \
+    BOOST_PP_EXPR_IF(i, os << ", ";)                       \
+    jsonwriter::do_serialize(os, BOOST_PP_STRINGIZE(fld)); \
+    os << ": ";                                            \
+    jsonwriter::do_serialize(os, s.fld);                   \
     os << "\n";
 
 

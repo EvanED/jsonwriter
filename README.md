@@ -1,4 +1,5 @@
-== libjsonwriter, a JSON output library for C++ ==
+libjsonwriter, a JSON output library for C++
+============================================
 
 `libjsonwriter` provides a library for easy serialization of C++
 objects to a JSON format (also usable as a Python literal as well as
@@ -6,7 +7,8 @@ YAML). It provides output operations for common C++ types including
 STL containers, and is *extensible*, meaning you can provide an
 outputter for your own format, and is *simple to use*.
 
-== Building an installation ==
+Building an installation
+------------------------
 
 This library currently consists of a single header, so there's no
 building to be done at all. Just copy that header to where you want.

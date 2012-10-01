@@ -7,8 +7,8 @@ YAML). It provides output operations for common C++ types including
 STL containers, and is *extensible*, meaning you can provide an
 outputter for your own format, and is *simple to use*.
 
-Building an installation
-------------------------
+Building and installation
+-------------------------
 
 This library currently consists of a single header, so there's no
 building to be done at all. Just copy that header to where you want.
@@ -23,7 +23,8 @@ compiler.
 
 In addition, I should probably write some tests one of these days.
 
-== How to serialize an object ==
+How to serialize an object
+--------------------------
 
 Serializing an object for which all component types have a `serialize`
 function defined is easy:
@@ -45,7 +46,7 @@ program will produce the output
     [1, 4, 9, 16]
 
 
-== Provided serializers ==
+### Provided serializers
 
 The `serialize` function is overloaded for different types;
 `libjsonwriter` provides overloads for the following:
@@ -68,7 +69,13 @@ The `serialize` function is overloaded for different types;
  each key parses as a string, and wrap it if not.)
 
 
-== Extending the serializer for your own types [basic use] ==
+Extending the serializer for your own types
+-------------------------------------------
+
+It is easy to extend the framework to your own types.
+
+
+### Writing a custom serializer
 
 To serialize your own type, you simply provide an overload of
 `serialize` that operates on it. Like the standard ones, the first
@@ -142,7 +149,7 @@ readability):
     ]
 
 
-== Outputting structures ==
+### Outputting structures
 
 If you have a structure (or class with public fields), you can easily
 define a `serialize` function for it using the macro
@@ -230,7 +237,7 @@ would like a deeper understanding of how pieces fit together, continue
 reading.
 
 
-== A whirlwind explanation of Argument-Dependent Lookup ==
+### A whirlwind explanation of Argument-Dependent Lookup
 
 There is a key feature of C++ called argument-dependent lookup (ADL),
 informally also referred to as Koenig Lookup. The process defined by

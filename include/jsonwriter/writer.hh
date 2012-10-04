@@ -234,6 +234,36 @@ namespace jsonwriter {
     }
 
 
+    /// Serialize the given integer to the stream as a JSON number.
+    ///
+    /// JSON can only use decimal numbers, so every number will be
+    /// serialized that way.
+    void
+    serialize(std::ostream & os, unsigned int i)
+    {
+        os << i;
+    }
+
+
+    /// Serialize the given integer to the stream as a JSON number.
+    ///
+    /// JSON can only use decimal numbers, so every number will be
+    /// serialized that way.
+    ///
+    /// WARNING: I believe that JavaScript uses 64-bit floating points
+    ///          for all numbers. If your JSON parser always does the
+    ///          same, then a 64-bit long will have unrepresentable
+    ///          values.
+    ///
+    ///          No effort is currently made to detect this situation,
+    ///          though that'd be cool. (TODO)
+    void
+    serialize(std::ostream & os, long long i)
+    {
+        os << i;
+    }
+
+
     /// Serialize the given number to the given stream, as a JSON
     /// number.
     ///
